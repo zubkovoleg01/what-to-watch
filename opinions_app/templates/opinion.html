@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Фильм {{ opinion.title }}{%endblock %}
+{% block content %}
+<main>
+  <section class="container my-5">
+    <div class="row">
+      <h1>{{ opinion.title }}</h1>
+      <div class="col-12 col-lg-7 my-5">
+        <p>{{ opinion.text }}</p>
+        <p>
+          Больше о фильме:
+          {% if opinion.source %}
+            <a href="{{ opinion.source }}">{{ opinion.source }}</a>
+          {% else %} источник не указан {% endif %}
+        </p>
+        <p>
+          Ссылка для друзей:
+          <a href="{{ url_for('opinion_view', id=opinion.id, _external=True) }}" id="copyLink">{{ url_for('opinion_view', id=opinion.id, _external=True) }}</a>
+        </p>
+      </div>
+      <div class="col-12 col-lg-5">
+        <img class="img-fluid mx-auto d-block" src="{{ url_for('static', filename='img/illustration.png') }}" alt="" />
+      </div>
+    </div>
+  </section>
+</main>
+<script>
+    document.getElementById('copyLink').addEventListener('click', function(event) {
+        event.preventDefault();
+        var url = this.getAttribute('href');
+
+        // Используем SweetAlert для вывода красивого всплывающего уведомления
+        Swal.fire({
+            title: 'Ссылка скопирована!',
+            text: url,
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 2000  // Устанавливаем таймер для автоматического закрытия уведомления через 2 секунды
+        });
+
+        // Копируем URL в буфер обмена
+        navigator.clipboard.writeText(url);
+    });
+</script>
+{% endblock %}
